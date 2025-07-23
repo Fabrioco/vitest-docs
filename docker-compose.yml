@@ -1,0 +1,46 @@
+version: "3.8"
+
+services:
+  app:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    command: npm run dev
+    container_name: app-vitest
+    depends_on:
+      db_vitest:
+        condition: service_healthy
+    volumes:
+      - .:/app
+      - /app/prisma
+      - node_modules:/app/node_modules
+    env_file:
+      - .env
+    environment:
+      - NODE_ENV=development
+    ports:
+      - "${PORT}:${PORT}"
+
+  db_vitest:
+    image: mysql:8.0
+    container_name: db_vitest
+    environment:
+      - MYSQL_DATABASE=${DB_DATABASE_NAME}
+      - MYSQL_ROOT_PASSWORD=${DB_PASSWORD}
+      - MYSQL_TCP_PORT=${DB_PORT}
+    healthcheck:
+      test: ["CMD", "mysqladmin", "ping", "-h", "localhost"]
+      timeout: 5s
+      retries: 15
+    ports:
+      - "${DB_PORT}:${DB_PORT}"
+    restart: always
+    volumes:
+      - db_data:/var/lib/mysql
+
+volumes:
+  db_data:
+    driver: local
+
+  node_modules:
+    driver: local
