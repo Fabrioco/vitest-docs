@@ -1,4 +1,3 @@
-
 # vitest-docs
 
 > API backend em TypeScript com Express, Prisma e testes com Vitest + Supertest, rodando via Docker — ideal para estudo.
@@ -38,7 +37,7 @@ Copie o arquivo `.env.example` para `.env` e ajuste conforme seu ambiente:
 
 ```bash
 cp .env.example .env
-````
+```
 
 ---
 
@@ -52,8 +51,8 @@ docker-compose up --build
 
 Esse comando:
 
-* Cria e sobe os containers da aplicação e do banco (SQLite ou outro)
-* O backend ficará disponível na porta configurada no `.env` (padrão 3000)
+- Cria e sobe os containers da aplicação e do banco (SQLite ou outro)
+- O backend ficará disponível na porta configurada no `.env` (padrão 3000)
 
 **Importante:** O backend precisa estar rodando para que os testes possam se conectar.
 
@@ -154,7 +153,3 @@ Desenvolvido por Fabrício Oliveira Lopes
 ---
 
 # Bom estudo e bons testes! 🚀
-
-```
-
----
