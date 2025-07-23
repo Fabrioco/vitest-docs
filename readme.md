@@ -1,238 +1,160 @@
-````markdown
-# 🧪 Projeto Vitest + Docker para Testes Unitários em Node.js + TypeScript
 
-Este projeto é um exemplo prático de como configurar e executar **testes unitários** em uma aplicação Node.js com TypeScript, utilizando a ferramenta de testes moderna [Vitest](https://vitest.dev/), e como orquestrar esse ambiente usando **Docker** e **Docker Compose**.
+# vitest-docs
 
----
-
-## 🎯 Objetivo do Projeto
-
-- Demonstrar como escrever testes simples para funções em TypeScript.
-- Mostrar a configuração do Vitest para rodar testes e gerar relatórios de cobertura.
-- Exibir o uso do Docker para criar um ambiente isolado, facilitando a execução dos testes sem precisar instalar nada localmente além do Docker.
-- Ensinar como integrar Docker Compose para facilitar o gerenciamento do container.
+> API backend em TypeScript com Express, Prisma e testes com Vitest + Supertest, rodando via Docker — ideal para estudo.
 
 ---
 
-## 📋 Tecnologias Utilizadas
+## Índice
 
-| Tecnologia   | Descrição                                     | Links Oficiais                         |
-|--------------|-----------------------------------------------|---------------------------------------|
-| Node.js      | Ambiente JavaScript para servidor             | https://nodejs.org/                   |
-| TypeScript   | Superset do JavaScript com tipagem estática   | https://www.typescriptlang.org/       |
-| Vitest       | Framework de testes unitários moderno          | https://vitest.dev/                   |
-| Docker       | Plataforma para criar, rodar e gerenciar containers | https://www.docker.com/             |
-| Docker Compose| Ferramenta para definir e rodar multi-containers | https://docs.docker.com/compose/     |
+- [Sobre](#sobre)
+- [Pré-requisitos](#pré-requisitos)
+- [Configuração](#configuração)
+- [Rodando o backend com Docker](#rodando-o-backend-com-docker)
+- [Rodando os testes](#rodando-os-testes)
+- [Estrutura do projeto](#estrutura-do-projeto)
+- [Endpoints](#endpoints)
+- [Contribuição](#contribuição)
+- [Licença](#licença)
 
 ---
 
-## 📁 Estrutura do Projeto
+## Sobre
 
-```text
-vitest-docs/
-├── src/
-│   ├── server.ts             # Arquivo de exemplo do servidor (sem lógica)
-│   └── test/
-│       ├── soma.ts           # Função que soma dois números
-│       ├── subtracao.ts      # Função que subtrai dois números
-│       └── soma.test.ts      # Teste unitário para a função soma
-├── Dockerfile                # Instruções para construir a imagem Docker
-├── docker-compose.yml        # Configuração para rodar o container via Compose
-├── vitest.config.ts          # Configurações do Vitest
-├── package.json              # Dependências e scripts do npm
-└── tsconfig.json             # Configuração do TypeScript
+Projeto backend para gerenciamento de tarefas, feito para estudo prático com Docker, TypeScript, Prisma e testes.
+
+---
+
+## Pré-requisitos
+
+- Docker e Docker Compose instalados
+- Git instalado
+
+---
+
+## Configuração
+
+Copie o arquivo `.env.example` para `.env` e ajuste conforme seu ambiente:
+
+```bash
+cp .env.example .env
 ````
 
 ---
 
-## ⚙️ Configuração Inicial
+## Rodando o backend com Docker
 
-### Requisitos
+Para subir o backend com o banco em containers Docker, execute:
 
-* [Node.js](https://nodejs.org/en/download/) (para rodar localmente, caso queira)
-* [npm](https://docs.npmjs.com/downloading-and-installing-node-js-and-npm) (vem junto com Node)
-* [Docker](https://docs.docker.com/get-docker/) e [Docker Compose](https://docs.docker.com/compose/install/) instalados
-
----
-
-## 🔧 Como usar
-
-### Rodando localmente (sem Docker)
-
-1. Clone o repositório:
-
-   ```bash
-   git clone https://github.com/Fabrioco/vitest-docs.git
-   cd vitest-docs
-   ```
-
-2. Instale as dependências:
-
-   ```bash
-   npm install
-   ```
-
-3. Rode os testes com cobertura:
-
-   ```bash
-   npm run test
-   ```
-
-4. Abra o relatório de cobertura (gerado em `coverage/index.html`) no navegador para visualizar os detalhes.
-
----
-
-### Rodando via Docker + Docker Compose
-
-> Você só precisa do Docker instalado para rodar esse passo.
-
-1. Clone o repositório e entre na pasta:
-
-   ```bash
-   git clone https://github.com/Fabrioco/vitest-docs.git
-   cd vitest-docs
-   ```
-
-2. Suba o container (irá construir a imagem se for a primeira vez):
-
-   ```bash
-   docker compose up --build
-   ```
-
-3. Isso irá rodar o comando `npm run dev` dentro do container, que deixa o Vitest rodando em modo watch.
-
-4. Para rodar os testes uma única vez com cobertura, você pode entrar no container:
-
-   ```bash
-   docker exec -it app-vitest bash
-   npm run test
-   ```
-
-5. Para parar o container:
-
-   ```bash
-   docker compose down
-   ```
-
----
-
-## 🧪 Testes e Cobertura
-
-### Scripts npm configurados
-
-No `package.json`:
-
-```json
-"scripts": {
-  "dev": "vitest --watch",
-  "test": "vitest run --coverage"
-}
+```bash
+docker-compose up --build
 ```
 
-* `npm run dev`: executa o Vitest em modo de observação, para desenvolvimento interativo.
-* `npm run test`: executa os testes uma única vez e gera relatório de cobertura.
+Esse comando:
 
-### Como escrever testes
+* Cria e sobe os containers da aplicação e do banco (SQLite ou outro)
+* O backend ficará disponível na porta configurada no `.env` (padrão 3000)
 
-Exemplo em `src/test/soma.test.ts`:
+**Importante:** O backend precisa estar rodando para que os testes possam se conectar.
 
-```ts
-import { describe, it, expect } from "vitest";
-import { soma } from "./soma";
+---
 
-describe("Função soma", () => {
-  it("Deve somar dois números corretamente", () => {
-    expect(soma(2, 3)).toBe(5);
-  });
-});
+## Rodando os testes
+
+Abra um outro terminal na raiz do projeto.
+
+Você pode rodar os testes localmente, garantindo que o backend está ativo no Docker:
+
+```bash
+npm test
+```
+
+Os testes utilizam o **Supertest** para fazer requisições HTTP ao servidor em execução.
+
+---
+
+### Fluxo recomendado
+
+1. Em um terminal, inicie o backend via Docker:
+
+```bash
+docker-compose up --build
+```
+
+2. Em outro terminal, execute os testes:
+
+```bash
+npm test
+```
+
+Assim, os testes simulam requisições reais para o servidor ativo.
+
+---
+
+## Estrutura do projeto
+
+```
+src/
+ ├─ app.ts               # Configuração do Express e rotas
+ ├─ server.ts            # Inicialização do servidor
+ ├─ modules/task/        # Módulo das tarefas
+ │    ├─ routes.ts       # Rotas da API
+ │    ├─ service.ts      # Lógica de acesso ao banco via Prisma
+ │    └─ controller.ts   # (se existir) Controladores HTTP
+prisma/
+ ├─ schema.prisma        # Modelo do banco de dados Prisma
+ ├─ migrations/          # Migrations do banco
+tests/                   # Testes com Vitest e Supertest
+.env.example             # Exemplo de variáveis de ambiente
+Dockerfile               # Configuração do container da aplicação
+docker-compose.yml       # Configuração do Docker Compose
+package.json             # Dependências e scripts npm
+tsconfig.json            # Configuração TypeScript
+vitest.config.ts         # Configuração Vitest
 ```
 
 ---
 
-## 📄 Explicando os arquivos Docker
+## Endpoints disponíveis
 
-### Dockerfile
+| Método | Endpoint     | Descrição                              |
+| ------ | ------------ | -------------------------------------- |
+| GET    | `/`          | Rota raiz, retorna texto simples       |
+| GET    | `/api/tasks` | Retorna lista de tarefas               |
+| POST   | `/api/tasks` | Cria uma nova tarefa (se implementado) |
 
-```Dockerfile
-FROM node:18
+---
 
-WORKDIR /app
+## Contribuição
 
-COPY package*.json ./
-RUN npm install
+Sinta-se livre para contribuir seguindo estes passos:
 
-COPY . .
+1. Faça um fork do projeto
+2. Crie uma branch para sua feature/correção:
 
-CMD ["npm", "run", "dev"]
+```bash
+git checkout -b minha-feature
 ```
 
-* Define a imagem base do Node 18.
-* Copia os arquivos de dependência e instala os pacotes.
-* Copia o restante do projeto.
-* Define o comando padrão para rodar `npm run dev`.
+3. Faça commits claros e objetivos
+4. Envie um Pull Request detalhando as mudanças
 
-### docker-compose.yml
+---
 
-```yaml
-version: "3.8"
+## Licença
 
-services:
-  app:
-    build:
-      context: .
-      dockerfile: Dockerfile
-    command: npm run dev
-    container_name: app-vitest
-    volumes:
-      - .:/app
-    tty: true
+Projeto licenciado sob a licença MIT.
+
+---
+
+# Contato
+
+Desenvolvido por Fabrício Oliveira Lopes
+
+---
+
+# Bom estudo e bons testes! 🚀
+
 ```
-
-* Define um serviço chamado `app` que será o container do seu projeto.
-* Mapeia o código local para dentro do container (`volumes`).
-* Executa o comando `npm run dev`.
-* Mantém o terminal interativo.
-
----
-
-## 📌 Boas práticas e dicas
-
-* **Não versionar arquivos gerados automaticamente:**
-  A pasta `coverage/` está no `.gitignore` porque é gerada ao rodar os testes e não precisa ficar no Git.
-
-* **Use o Docker para garantir que todos rodem o projeto no mesmo ambiente**
-  Isso evita bugs que acontecem só em algumas máquinas por diferenças de versão.
-
-* **Adicione mais testes para aumentar a cobertura**
-  Crie testes para as funções em `subtracao.ts` e qualquer outra função que for adicionar.
-
----
-
-## 🎓 Sugestões para estudo
-
-* Crie uma função `multiplicar` e teste ela.
-* Crie uma função que lance erro (ex: divisão por zero) e teste se o erro é lançado.
-* Use os comandos Docker para entrar no container e experimentar rodar testes manualmente.
-* Experimente modificar o `docker-compose.yml` para rodar `npm run test` automaticamente ao subir.
-* Explore a documentação oficial do Vitest para testar mocks, spies, hooks e mais.
-
----
-
-## 🤝 Contribuições
-
-Contribuições são bem-vindas! Faça um fork, crie branches com melhorias e envie pull requests.
-
----
-
-## 📜 Licença
-
-Este projeto está licenciado sob a licença MIT.
-
----
-
-## 👨‍💻 Autor
-
-Fabrício Oliveira Lopes
-[https://github.com/Fabrioco](https://github.com/Fabrioco)
 
 ---
