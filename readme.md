@@ -58,11 +58,23 @@ Esse comando:
 
 ---
 
-## Rodando os testes
+## Em outro terminal
 
-Abra um outro terminal na raiz do projeto.
+Rode:
 
-Você pode rodar os testes localmente, garantindo que o backend está ativo no Docker:
+```bash
+docker exec -it app-vitest bash
+```
+
+### Rodar os seeds do projeto
+
+```bash
+npm run prisma:seed
+```
+
+### Fazer os testes com Supertest
+
+Rode:
 
 ```bash
 npm test
@@ -74,13 +86,31 @@ Os testes utilizam o **Supertest** para fazer requisições HTTP ao servidor em 
 
 ### Fluxo recomendado
 
-1. Em um terminal, inicie o backend via Docker:
+1. Copie o arquivo `.env.example` e ajuste conforme necessário:
+
+```bash
+cp .env.example .env
+```
+
+2. Inicie o backend via Docker:
 
 ```bash
 docker-compose up --build
 ```
 
-2. Em outro terminal, execute os testes:
+3. Em outro terminal, acesse o container:
+
+```bash
+docker exec -it app-vitest bash
+```
+
+4. Rode os seeds do banco:
+
+```bash
+npm run prisma:seed
+```
+
+5. Execute os testes:
 
 ```bash
 npm test
@@ -120,7 +150,6 @@ vitest.config.ts         # Configuração Vitest
 | ------ | ------------ | -------------------------------------- |
 | GET    | `/`          | Rota raiz, retorna texto simples       |
 | GET    | `/api/tasks` | Retorna lista de tarefas               |
-| POST   | `/api/tasks` | Cria uma nova tarefa (se implementado) |
 
 ---
 
@@ -153,3 +182,4 @@ Desenvolvido por Fabrício Oliveira Lopes
 ---
 
 # Bom estudo e bons testes! 🚀
+
